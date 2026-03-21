@@ -3,28 +3,49 @@
  */
 package com.oz;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.sql.DataSource;
 import com.oz.config.Config;
 import com.oz.db.DatabaseFactory;
 import com.oz.db.MigrationRunner;
+import com.oz.db.repository.sqlite.AreaComumRepositoryImpl;
+import com.oz.service.AreaComumService;
+import com.oz.service.impl.AreaComumServiceImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import com.oz.ui.MainController;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class App extends Application {
 	public static void main(String[] args) {
 		Config.load();
 		DataSource ds = DatabaseFactory.getDataSource();
 		MigrationRunner.initDatabase(ds);
+		try (Connection conn = ds.getConnection()) {
+			AreaComumRepositoryImpl areaComumRepo = new AreaComumRepositoryImpl(conn);
+			AreaComumService areaComumService = new AreaComumServiceImpl(areaComumRepo);
+			launch(args);
+		} catch (SQLException e) {
+
+		}
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/index.fxml"));
 		loader.setControllerFactory(clazz -> {
-			if (clazz == MainController.class) {
-				return new MainController();
+			try {
+				return clazz.getDeclaredConstructor().newInstance();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
-			return null;
 		});
-
 		Parent root = loader.load();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Hello, World!");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 }

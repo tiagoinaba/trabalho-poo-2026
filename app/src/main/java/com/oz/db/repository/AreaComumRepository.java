@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.oz.domain.AreaComum;
 
 public interface AreaComumRepository {
-	void salvar(AreaComum area);
+	AreaComum salvar(AreaComum area);
     List<AreaComum> buscarTodas();
     Optional<AreaComum> buscarPorId(Long id);
     void excluir(Long id);

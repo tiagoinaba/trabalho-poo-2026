@@ -7,7 +7,8 @@ import com.oz.domain.AreaComum;
 import com.oz.domain.RegraFuncionamento;
 
 public interface AreaComumService {
-	void cadastrarArea(String nome);
+	AreaComum cadastrarArea(String nome);
+	AreaComum atualizarArea(AreaComum area);
 
 	void atualizarRegra(Long areaId, DayOfWeek dia, LocalTime limite, boolean permitido);
 
