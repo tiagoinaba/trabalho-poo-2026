@@ -7,12 +7,12 @@ public class AreaComum {
 	public AreaComum(String nome) {
 		this.id = null;
 		this.name = nome;
-	};
+	}
 
 	public AreaComum(Long id, String nome) {
 		this.id = id;
 		this.name = nome;
-	};
+	}
 
 	public Long getId() {
 		return id;

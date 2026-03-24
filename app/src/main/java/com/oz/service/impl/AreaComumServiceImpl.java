@@ -3,43 +3,58 @@ package com.oz.service.impl;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+
 import com.oz.db.repository.AreaComumRepository;
+import com.oz.db.repository.RegraRepository;
 import com.oz.domain.AreaComum;
 import com.oz.domain.RegraFuncionamento;
+import com.oz.domain.exception.RegraNegocioException;
 import com.oz.service.AreaComumService;
 
 public class AreaComumServiceImpl implements AreaComumService {
 
-	private final AreaComumRepository repo;
+	private final AreaComumRepository areaRepo;
+	private final RegraRepository regraRepo;
 
-	public AreaComumServiceImpl(AreaComumRepository repo) {
-		this.repo = repo;
+	public AreaComumServiceImpl(AreaComumRepository areaRepo, RegraRepository regraRepo) {
+		this.areaRepo = areaRepo;
+		this.regraRepo = regraRepo;
 	}
 
 	@Override
 	public AreaComum cadastrarArea(String nome) {
-		return repo.salvar(new AreaComum(nome));
+		return areaRepo.salvar(new AreaComum(nome));
 	}
 
 	@Override
 	public AreaComum atualizarArea(AreaComum area) {
-		return repo.salvar(area);
+		return areaRepo.salvar(area);
 	}
 
 	@Override
 	public List<AreaComum> listarTodas() {
-		return repo.buscarTodas();
+		return areaRepo.buscarTodas();
 	}
 
 	@Override
-	public void atualizarRegra(Long areaId, DayOfWeek dia, LocalTime limite, boolean permitido) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'atualizarRegra'");
+	public void atualizarRegra(Long areaId, DayOfWeek dia, boolean permitido, LocalTime inicio, LocalTime limite) throws RegraNegocioException {
+		Optional<AreaComum> areaOptional = areaRepo.buscarPorId(areaId);
+		if (areaOptional.isEmpty()) {
+			throw new RegraNegocioException("Área comum não encontrada!");
+		}
+
+		RegraFuncionamento novaRegra = new RegraFuncionamento(areaId, dia, permitido, inicio, limite);
+		regraRepo.atualizarRegra(novaRegra);
 	}
 
 	@Override
-	public List<RegraFuncionamento> buscarRegrasDaArea(Long areaId) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'buscarRegrasDaArea'");
+	public List<RegraFuncionamento> buscarRegrasDaArea(Long areaId) throws RegraNegocioException {
+		Optional<AreaComum> areaOptional = areaRepo.buscarPorId(areaId);
+		if (areaOptional.isEmpty()) {
+			throw new RegraNegocioException("Área comum não encontrada!");
+		}
+		
+		return regraRepo.listarRegrasPorArea(areaId);
 	}
 }
