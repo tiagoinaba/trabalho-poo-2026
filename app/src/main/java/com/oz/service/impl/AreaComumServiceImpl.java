@@ -57,4 +57,9 @@ public class AreaComumServiceImpl implements AreaComumService {
 		
 		return regraRepo.listarRegrasPorArea(areaId);
 	}
+
+	@Override
+	public void deletarArea(AreaComum area) throws RegraNegocioException {
+		areaRepo.excluir(area.getId());
+	}
 }

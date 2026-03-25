@@ -16,4 +16,6 @@ public interface AreaComumService {
 	List<AreaComum> listarTodas();
 
 	List<RegraFuncionamento> buscarRegrasDaArea(Long areaId) throws RegraNegocioException;
+
+	void deletarArea(AreaComum area) throws RegraNegocioException;
 }
