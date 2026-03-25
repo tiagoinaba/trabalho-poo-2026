@@ -12,6 +12,7 @@ import com.oz.db.MigrationRunner;
 import com.oz.db.repository.sqlite.AreaComumRepositoryImpl;
 import com.oz.service.AreaComumService;
 import com.oz.service.impl.AreaComumServiceImpl;
+import com.oz.ui.AreaController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,23 +20,27 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
-	public static void main(String[] args) {
-		Config.load();
-		DataSource ds = DatabaseFactory.getDataSource();
-		MigrationRunner.initDatabase(ds);
-		try (Connection conn = ds.getConnection()) {
-			AreaComumRepositoryImpl areaComumRepo = new AreaComumRepositoryImpl(conn);
-			AreaComumService areaComumService = new AreaComumServiceImpl(areaComumRepo);
-			launch(args);
-		} catch (SQLException e) {
+	private AreaComumService areaComumService;
+	private Connection connection;
 
-		}
+	@Override
+	public void init() throws Exception {
+        Config.load();
+        DataSource ds = DatabaseFactory.getDataSource();
+        MigrationRunner.initDatabase(ds);
+        
+        this.connection = ds.getConnection();
+        AreaComumRepositoryImpl areaComumRepo = new AreaComumRepositoryImpl(connection);
+        this.areaComumService = new AreaComumServiceImpl(areaComumRepo, null);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/index.fxml"));
 		loader.setControllerFactory(clazz -> {
+			if (clazz == AreaController.class) {
+				return new AreaController(areaComumService);
+			}
 			try {
 				return clazz.getDeclaredConstructor().newInstance();
 			} catch (Exception e) {
@@ -44,8 +49,16 @@ public class App extends Application {
 		});
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Hello, World!");
+		primaryStage.setTitle("OZ");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		if (connection != null) {
+			connection.close();
+		}
+		super.stop();
 	}
 }
