@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oz.ui.AreaController">
+	<padding>
+		<Insets top="20" right="20" bottom="20" left="20" />
+	</padding>
+
+	<HBox>
+		<Button text="Voltar" onAction="#handleReturn" />
+	</HBox>
+
+	<Label text="Área Comum" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+	<GridPane hgap="10" vgap="10">
+		<Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+		<TextField fx:id="nameField" promptText="Ex: Churrasqueira" GridPane.columnIndex="1"
+			GridPane.rowIndex="0" />
+		<HBox GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10" alignment="CENTER_RIGHT">
+			<Button fx:id="btnSave" text="Salvar nova área" onAction="#handleSave" style="-fx-base: #2ecc71;" />
+			<Button text="Cancelar" onAction="#handleCancel" />
+		</HBox>
+	</GridPane>
+
+	<Separator />
+
+	<Label text="Áreas Comuns Cadastradas" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+	<ListView fx:id="areasListView" />
+
+	<HBox spacing="10" alignment="CENTER_RIGHT">
+		<Button text="Excluir" onAction="#handleDelete" style="-fx-base: #ff0000;" />
+	</HBox>
+
+	<Separator />
+
+	<Label text="Regras de Funcionamento" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+	<Label text="Selecione uma área para editar suas regras" style="-fx-text-fill: gray;" />
+
+	<TableView fx:id="regrasTableView">
+		<columns>
+			<TableColumn text="Dia" prefWidth="120" fx:id="colDia" />
+			<TableColumn text="Permitido" prefWidth="80" fx:id="colPermitido" />
+			<TableColumn text="Início" prefWidth="100" fx:id="colInicio" />
+			<TableColumn text="Limite" prefWidth="100" fx:id="colLimite" />
+		</columns>
+	</TableView>
+
+	<HBox spacing="10" alignment="CENTER_RIGHT">
+		<Button fx:id="btnSalvarRegras" text="Salvar Regras" onAction="#handleSalvarRegras" style="-fx-base: #2ecc71;" />
+	</HBox>
+
+</VBox>

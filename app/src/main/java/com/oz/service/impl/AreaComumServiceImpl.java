@@ -38,14 +38,21 @@ public class AreaComumServiceImpl implements AreaComumService {
 	}
 
 	@Override
-	public void atualizarRegra(Long areaId, DayOfWeek dia, boolean permitido, LocalTime inicio, LocalTime limite) throws RegraNegocioException {
+	public void atualizarRegra(Long areaId, DayOfWeek dia, boolean permitido, LocalTime inicio,
+			LocalTime limite) throws RegraNegocioException {
 		Optional<AreaComum> areaOptional = areaRepo.buscarPorId(areaId);
 		if (areaOptional.isEmpty()) {
 			throw new RegraNegocioException("Área comum não encontrada!");
 		}
 
-		RegraFuncionamento novaRegra = new RegraFuncionamento(areaId, dia, permitido, inicio, limite);
-		regraRepo.atualizarRegra(novaRegra);
+		RegraFuncionamento novaRegra;
+		try {
+			novaRegra = new RegraFuncionamento(areaId, dia, permitido, inicio, limite);
+			regraRepo.atualizarRegra(novaRegra);
+		} catch (IllegalArgumentException e) {
+			throw new RegraNegocioException(
+					"É preciso definir os horários de início e limite quando o uso é permitido", e);
+		}
 	}
 
 	@Override
@@ -54,7 +61,7 @@ public class AreaComumServiceImpl implements AreaComumService {
 		if (areaOptional.isEmpty()) {
 			throw new RegraNegocioException("Área comum não encontrada!");
 		}
-		
+
 		return regraRepo.listarRegrasPorArea(areaId);
 	}
 

@@ -4,49 +4,75 @@
 package com.oz;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import javax.sql.DataSource;
 import com.oz.config.Config;
 import com.oz.db.DatabaseFactory;
 import com.oz.db.MigrationRunner;
+import com.oz.db.repository.AreaComumRepository;
+import com.oz.db.repository.RegraRepository;
 import com.oz.db.repository.sqlite.AreaComumRepositoryImpl;
+import com.oz.db.repository.sqlite.RegraRepositoryImpl;
 import com.oz.service.AreaComumService;
 import com.oz.service.impl.AreaComumServiceImpl;
 import com.oz.ui.AreaController;
+import com.oz.ui.HomeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class App extends Application {
+	private static App instance;
 	private AreaComumService areaComumService;
 	private Connection connection;
+	private Callback<Class<?>, Object> controllerFactory;
+
+	private HomeController homeController;
+	private AreaController areaController;
 
 	@Override
 	public void init() throws Exception {
-        Config.load();
-        DataSource ds = DatabaseFactory.getDataSource();
-        MigrationRunner.initDatabase(ds);
-        
-        this.connection = ds.getConnection();
-        AreaComumRepositoryImpl areaComumRepo = new AreaComumRepositoryImpl(connection);
-        this.areaComumService = new AreaComumServiceImpl(areaComumRepo, null);
-	}
+		instance = this;
+		Config.load();
+		DataSource ds = DatabaseFactory.getDataSource();
+		MigrationRunner.initDatabase(ds);
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/index.fxml"));
-		loader.setControllerFactory(clazz -> {
+		this.connection = ds.getConnection();
+		AreaComumRepository areaComumRepo = new AreaComumRepositoryImpl(connection);
+		RegraRepository regraRepository = new RegraRepositoryImpl(connection);
+		this.areaComumService = new AreaComumServiceImpl(areaComumRepo, regraRepository);
+
+		this.areaController = new AreaController(areaComumService);
+
+		this.controllerFactory = clazz -> {
 			if (clazz == AreaController.class) {
-				return new AreaController(areaComumService);
+				return areaController;
+			}
+			if (clazz == HomeController.class) {
+				return homeController;
 			}
 			try {
 				return clazz.getDeclaredConstructor().newInstance();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		});
+		};
+	}
+
+	public static Callback<Class<?>, Object> getContext() {
+		return instance.controllerFactory;
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		homeController = new HomeController();
+		homeController.setStage(primaryStage);
+
+		FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/index.fxml"));
+		loader.setControllerFactory(controllerFactory);
+
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("OZ");
