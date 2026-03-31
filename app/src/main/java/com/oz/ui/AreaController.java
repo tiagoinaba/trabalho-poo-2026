@@ -22,6 +22,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -176,13 +177,19 @@ public class AreaController {
             return;
         }
 
-        try {
-            areaComumService.deletarArea(selectedArea);
-            resetFields();
-            carregarAreasComuns();
-        } catch (RegraNegocioException e) {
-            new Alert(AlertType.ERROR, "Erro ao excluir área: " + e.getMessage()).showAndWait();
-        }
+        Alert confirm = new Alert(AlertType.CONFIRMATION,
+            "Deseja excluir a área '" + selectedArea.getName() + "'?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    areaComumService.deletarArea(selectedArea);
+                    resetFields();
+                    carregarAreasComuns();
+                } catch (RegraNegocioException e) {
+                    new Alert(AlertType.ERROR, "Erro ao excluir área: " + e.getMessage()).showAndWait();
+                }
+            }
+        });
     }
 
     @FXML

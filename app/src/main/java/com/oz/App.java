@@ -46,7 +46,7 @@ public class App extends Application {
 		this.connection = ds.getConnection();
 		AreaComumRepository areaComumRepo = new AreaComumRepositoryImpl(connection);
 		RegraRepository regraRepository = new RegraRepositoryImpl(connection);
-		ReservaRepository reservaRepository = new ReservaRepositoryImpl(connection, areaComumRepo);
+		ReservaRepository reservaRepository = new ReservaRepositoryImpl(connection);
 
 		this.areaComumService = new AreaComumServiceImpl(areaComumRepo, regraRepository);
 		this.reservaService = new ReservaServiceImpl(reservaRepository, regraRepository);
