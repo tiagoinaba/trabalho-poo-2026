@@ -5,9 +5,11 @@ import java.util.List;
 import com.oz.domain.Reserva;
 
 public interface ReservaRepository {
-	void salvar(Reserva reserva);
+	Reserva salvar(Reserva reserva);
 
 	List<Reserva> buscarPorData(LocalDate data);
+
+	List<Reserva> buscarPorArea(Long areaId);
 
 	boolean existeConflito(Long areaId, LocalDate data);
 

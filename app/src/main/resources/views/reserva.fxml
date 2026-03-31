@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oz.ui.ReservaController">
+	<padding>
+		<Insets top="20" right="20" bottom="20" left="20" />
+	</padding>
+
+	<HBox>
+		<Button text="Voltar" onAction="#handleReturn" />
+	</HBox>
+
+	<Label text="Reservas de Áreas Comuns" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+	<Separator />
+
+	<HBox spacing="20" VBox.vgrow="ALWAYS">
+		<VBox spacing="10" prefWidth="200">
+			<Label text="Áreas Comuns" style="-fx-font-weight: bold;" />
+			<ListView fx:id="areasListView" />
+		</VBox>
+
+		<VBox spacing="10" HBox.hgrow="ALWAYS">
+			<Label text="Reservas da Área" style="-fx-font-weight: bold;" />
+			<TableView fx:id="reservasTableView">
+				<columns>
+					<TableColumn text="Morador" prefWidth="150" fx:id="colMorador" />
+					<TableColumn text="Apto" prefWidth="80" fx:id="colApto" />
+					<TableColumn text="Data" prefWidth="120" fx:id="colData" />
+				</columns>
+			</TableView>
+			<Button text="Cancelar Reserva Selecionada" onAction="#handleCancelarReserva" style="-fx-base: #ff4444;" />
+		</VBox>
+	</HBox>
+
+	<Separator />
+
+	<Label text="Nova Reserva" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+	<GridPane hgap="10" vgap="10">
+		<Label text="Área:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+		<ComboBox fx:id="areaComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="200" />
+
+		<Label text="Nome do Morador:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+		<TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="200" />
+
+		<Label text="Apartamento:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+		<TextField fx:id="apartmentField" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="100" />
+
+		<Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+		<DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+	</GridPane>
+
+	<HBox spacing="10" alignment="CENTER_RIGHT">
+		<Button text="Agendar Reserva" onAction="#handleAgendar" style="-fx-base: #2ecc71;" />
+		<Button text="Limpar" onAction="#handleLimpar" />
+	</HBox>
+
+</VBox>

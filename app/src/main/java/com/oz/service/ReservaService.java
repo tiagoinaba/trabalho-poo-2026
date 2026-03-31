@@ -6,12 +6,11 @@ import com.oz.domain.Reserva;
 import com.oz.domain.exception.RegraNegocioException;
 
 public interface ReservaService {
-	/**
-	 * @throws RegraNegocioException caso a reserva fira alguma regra de horário ou dia.
-	 */
 	void agendar(Reserva reserva) throws RegraNegocioException;
 
 	List<Reserva> listarReservasPorData(LocalDate data);
+
+	List<Reserva> listarReservasPorArea(Long areaId);
 
 	void cancelarReserva(Long id);
 }

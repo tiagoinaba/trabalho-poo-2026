@@ -17,6 +17,7 @@
 		<Label text="Menu Principal" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 		
 		<Button fx:id="btnAreaComum" text="Áreas Comuns" onAction="#navigateToAreaComum" prefWidth="200" />
+		<Button fx:id="btnReserva" text="Reservas" onAction="#navigateToReserva" prefWidth="200" />
 	</VBox>
 
 </VBox>

@@ -14,6 +14,9 @@ public class HomeController {
 	@FXML
     private javafx.scene.control.Button btnAreaComum;
 
+    @FXML
+    private javafx.scene.control.Button btnReserva;
+
     public void setStage(Stage stage) {
 		this.stage = stage;
 	}
@@ -27,6 +30,18 @@ public class HomeController {
             stage.setScene(new Scene(root));
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar área comum", e);
+        }
+    }
+
+    @FXML
+    private void navigateToReserva() {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/reserva.fxml"));
+            loader.setControllerFactory(App.getContext());
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar reservas", e);
         }
     }
 }

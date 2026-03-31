@@ -1,4 +1,5 @@
 package com.oz.service.impl;
+
 import com.oz.db.repository.RegraRepository;
 import com.oz.db.repository.ReservaRepository;
 import com.oz.domain.RegraFuncionamento;
@@ -30,9 +31,8 @@ public class ReservaServiceImpl implements ReservaService {
                 .orElseThrow(() -> new RegraNegocioException("Não há regras de funcionamento para este dia/área."));
 
         if (!regra.isPermitido()) {
-            throw new RegraNegocioException("Reservas não são permitidas para este dia (ex: segundas-feiras).");
+            throw new RegraNegocioException("Reservas não são permitidas para este dia.");
         }
-
 
         if (reservaRepo.existeConflito(reserva.getArea().getId(), reserva.getData())) {
             throw new RegraNegocioException("Esta área já está reservada para o dia selecionado.");
@@ -44,6 +44,11 @@ public class ReservaServiceImpl implements ReservaService {
     @Override
     public List<Reserva> listarReservasPorData(LocalDate data) {
         return reservaRepo.buscarPorData(data);
+    }
+
+    @Override
+    public List<Reserva> listarReservasPorArea(Long areaId) {
+        return reservaRepo.buscarPorArea(areaId);
     }
 
     @Override
