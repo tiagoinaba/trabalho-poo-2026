@@ -39,3 +39,13 @@ remover o papel e caneta da equação.
 = Observações
 
 + ~Local-first~ Local-only
+
+= Novos requisitos
+
+Cadastro de convidados. Necessário RG, CPF e nome. O convidado é atrelado à
+reserva.
+
+A área comum deve ter um novo campo para especificar o máximo de convidados. O
+número de convidados de uma reserva deve ser limitado a este novo campo.
+
+O morador é incluído nesta contagem.
